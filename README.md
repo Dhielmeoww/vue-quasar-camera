@@ -209,7 +209,3 @@ const capturePhoto = () => {
 | `camera-closed`    | -                             | Fired when camera is closed    |
 | `image-downloaded` | `{ filename, dataUrl }`       | Fired when image is downloaded |
 | `error`            | `Error`                       | Fired when error occurs        |
-
-## Methods (via ref)
-
-| Metho
