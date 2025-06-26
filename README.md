@@ -26,15 +26,15 @@ yarn add vue-quasar-camera
 ### From Git Repository
 
 ```bash
-npm install git+https://github.com/your-username/vue-quasar-camera.git
+npm install git+https://github.com/Dhielmeoww/vue-quasar-camera.git
 # or
-yarn add git+https://github.com/your-username/vue-quasar-camera.git
+yarn add git+https://github.com/Dhielmeoww/vue-quasar-camera.git
 ```
 
 ### Local Development
 
 ```bash
-git clone https://github.com/your-username/vue-quasar-camera.git
+git clone https://github.com/Dhielmeoww/vue-quasar-camera.git
 cd vue-quasar-camera
 npm install
 npm run build
