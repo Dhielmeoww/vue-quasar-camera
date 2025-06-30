@@ -246,6 +246,7 @@ const statusTextStyle = {
 
 const mediaElementStyle = computed(() => ({
   width: "100%",
+  height: props.mode === "inline" ? "100%" : "100%",
   objectFit: "cover",
   borderRadius: props.mode === "inline" ? "12px" : "27px",
   background: "#000",
@@ -394,110 +395,6 @@ const closeButtonStyle = computed(() => ({
   borderRadius: "50%",
   zIndex: 30,
   color: "white",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-computed(() => ({
-  minWidth: props.mode === "inline" ? "300px" : "350px",
-  maxWidth: "95vw",
-  background: "linear-gradient(145deg, #232526 0%, #414345 100%)",
-  borderRadius: "20px",
-  boxShadow:
-    "0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.1)",
-  border: "2px solid rgba(255,255,255,0.1)",
-  overflow: "hidden",
-}));
-
-computed(() => ({
-  background: "rgba(0,0,0,0.7)",
-  borderTopLeftRadius: "20px",
-  borderTopRightRadius: "20px",
-  padding: "15px 20px 10px 20px",
-  borderBottom: "1px solid rgba(255,255,255,0.08)",
-}));
-
-computed(() => ({
-  background: "rgba(0,0,0,0.7)",
-  border: "1px solid rgba(255,255,255,0.3)",
-  borderRadius: "50%",
-  color: "white",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-computed(() => ({
-  display: "flex",
-  justifyContent: "center",
-  background: "linear-gradient(145deg, #000000 0%, #1a1a1a 100%)",
-  borderRadius: "15px",
-  overflow: "hidden",
-  boxShadow:
-    "0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
-  border: "1px solid rgba(255, 255, 255, 0.1)",
-  position: "relative",
-}));
-
-computed(() => ({
-  width: "100%",
-  maxWidth: props.mode === "inline" ? "350px" : "450px",
-  height: "auto",
-  borderRadius: "15px",
-  display: "block",
-  margin: "0 auto",
-}));
-
-computed(() => ({
-  position: "absolute",
-  bottom: "8px",
-  left: "8px",
-  background: "rgba(0, 0, 0, 0.8)",
-  borderRadius: "10px",
-  padding: "5px 10px",
-  backdropFilter: "blur(10px)",
-  border: "1px solid rgba(255, 255, 255, 0.2)",
-}));
-
-computed(() => ({
-  background: "rgba(0, 0, 0, 0.3)",
-  padding: "15px",
-  backdropFilter: "blur(20px)",
-}));
-
-computed(() => ({
-  minWidth: "120px",
-  height: "40px",
-  background: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)",
-  backdropFilter: "blur(15px)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-computed(() => ({
-  minWidth: "120px",
-  height: "40px",
-  background: "linear-gradient(135deg, #f39c12 0%, #e67e22 100%)",
-  backdropFilter: "blur(15px)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-computed(() => ({
-  minWidth: "120px",
-  height: "40px",
-  background: "linear-gradient(135deg, #3498db 0%, #2980b9 100%)",
-  backdropFilter: "blur(15px)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
