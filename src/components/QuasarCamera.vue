@@ -296,7 +296,7 @@ const cameraContainerStyle = computed(() => ({
       ? "fixed"
       : props.mode === "fullscreen"
       ? "fixed"
-      : "inline-block",
+      : "",
   top:
     props.mode === "corner"
       ? "80px"
@@ -351,7 +351,7 @@ const cameraFrameStyle = computed(() => ({
     props.mode === "corner"
       ? "100%"
       : props.mode === "inline"
-      ? "300px"
+      ? "100%"
       : "75vh",
   maxWidth: props.mode === "fullscreen" ? "900px" : "none",
   maxHeight: props.mode === "fullscreen" ? "700px" : "none",
@@ -541,123 +541,6 @@ const closeButtonStyle = computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogCardStyle = computed(() => ({
-  minWidth: props.mode === "inline" ? "300px" : "350px",
-  maxWidth: "95vw",
-  background: "linear-gradient(145deg, #232526 0%, #414345 100%)",
-  borderRadius: "20px",
-  boxShadow:
-    "0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.1)",
-  border: "2px solid rgba(255,255,255,0.1)",
-  overflow: "hidden",
-}));
-
-const dialogHeaderStyle = computed(() => ({
-  background: "rgba(0,0,0,0.7)",
-  borderTopLeftRadius: "20px",
-  borderTopRightRadius: "20px",
-  padding: "15px 20px 10px 20px",
-  borderBottom: "1px solid rgba(255,255,255,0.08)",
-}));
-
-const dialogTitleStyle = {
-  color: "white",
-  fontSize: "16px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-};
-
-const dialogCloseButtonStyle = computed(() => ({
-  background: "rgba(0,0,0,0.7)",
-  border: "1px solid rgba(255,255,255,0.3)",
-  borderRadius: "50%",
-  color: "white",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-const dialogImageContainerStyle = computed(() => ({
-  display: "flex",
-  justifyContent: "center",
-  background: "linear-gradient(145deg, #000000 0%, #1a1a1a 100%)",
-  borderRadius: "15px",
-  overflow: "hidden",
-  boxShadow:
-    "0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
-  border: "1px solid rgba(255, 255, 255, 0.1)",
-  position: "relative",
-}));
-
-const dialogImageStyle = computed(() => ({
-  width: "100%",
-  maxWidth: props.mode === "inline" ? "350px" : "450px",
-  height: "auto",
-  borderRadius: "15px",
-  display: "block",
-  margin: "0 auto",
-}));
-
-const imageInfoOverlayStyle = computed(() => ({
-  position: "absolute",
-  bottom: "8px",
-  left: "8px",
-  background: "rgba(0, 0, 0, 0.8)",
-  borderRadius: "10px",
-  padding: "5px 10px",
-  backdropFilter: "blur(10px)",
-  border: "1px solid rgba(255, 255, 255, 0.2)",
-}));
-
-const imageInfoTextStyle = {
-  color: "white",
-  fontSize: "12px",
-  fontWeight: "500",
-};
-
-const dialogActionsStyle = computed(() => ({
-  background: "rgba(0, 0, 0, 0.3)",
-  padding: "15px",
-  backdropFilter: "blur(20px)",
-}));
-
-const dialogDownloadButtonStyle = computed(() => ({
-  minWidth: "120px",
-  height: "40px",
-  background: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)",
-  backdropFilter: "blur(15px)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-const dialogRetakeButtonStyle = computed(() => ({
-  minWidth: "120px",
-  height: "40px",
-  background: "linear-gradient(135deg, #f39c12 0%, #e67e22 100%)",
-  backdropFilter: "blur(15px)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-const dialogShareButtonStyle = computed(() => ({
-  minWidth: "120px",
-  height: "40px",
-  background: "linear-gradient(135deg, #3498db 0%, #2980b9 100%)",
-  backdropFilter: "blur(15px)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
 // Methods (same as before)
 const toggleCamera = () => {
   if (isOpen.value) {
@@ -813,11 +696,6 @@ const retakePhoto = async () => {
   }
 };
 
-const retakeFromDialog = () => {
-  resultDialog.value = false;
-  retakePhoto();
-};
-
 const viewCapturedImage = () => {
   resultDialog.value = true;
 };
@@ -898,10 +776,6 @@ const shareImage = async () => {
       timeout: 3000,
     });
   }
-};
-
-const shareImageFromDialog = () => {
-  shareImage();
 };
 
 const toggleRecording = () => {
@@ -1022,30 +896,6 @@ const switchCamera = async () => {
   }
 };
 
-const openSettings = () => {
-  emit("settings-opened");
-
-  $q.notify({
-    message: "Settings panel opened",
-    color: "info",
-    icon: "settings",
-    position: "top",
-    timeout: 1500,
-  });
-};
-
-const openGallery = () => {
-  emit("gallery-opened");
-
-  $q.notify({
-    message: "Gallery opened",
-    color: "info",
-    icon: "photo_library",
-    position: "top",
-    timeout: 1500,
-  });
-};
-
 // Hover effects
 const hoverToggleButton = (isHovering) => {
   const el = event?.target;
@@ -1077,18 +927,6 @@ const hoverActionButton = (event, isHovering) => {
       : "translateY(0) scale(1)";
     el.style.boxShadow = isHovering
       ? "0 10px 30px rgba(39, 174, 96, 0.4)"
-      : "none";
-  }
-};
-
-const hoverDialogButton = (event, isHovering) => {
-  const el = event?.target;
-  if (el) {
-    el.style.transform = isHovering
-      ? "translateY(-2px) scale(1.05)"
-      : "translateY(0) scale(1)";
-    el.style.boxShadow = isHovering
-      ? "0 10px 30px rgba(52, 152, 219, 0.4)"
       : "none";
   }
 };

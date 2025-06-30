@@ -153,7 +153,7 @@ const cameraContainerStyle = computed(() => ({
       ? "fixed"
       : props.mode === "fullscreen"
       ? "fixed"
-      : "inline-block",
+      : "",
   top:
     props.mode === "corner"
       ? "80px"
@@ -208,7 +208,7 @@ const cameraFrameStyle = computed(() => ({
     props.mode === "corner"
       ? "100%"
       : props.mode === "inline"
-      ? "300px"
+      ? "100%"
       : "75vh",
   maxWidth: props.mode === "fullscreen" ? "900px" : "none",
   maxHeight: props.mode === "fullscreen" ? "700px" : "none",
@@ -246,7 +246,6 @@ const statusTextStyle = {
 
 const mediaElementStyle = computed(() => ({
   width: "100%",
-  height: props.mode === "inline" ? "100%" : "100%",
   objectFit: "cover",
   borderRadius: props.mode === "inline" ? "12px" : "27px",
   background: "#000",
