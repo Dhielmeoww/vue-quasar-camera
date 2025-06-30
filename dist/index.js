@@ -161,7 +161,6 @@ const dynamicWidth = vue.computed(() => {
 });
 
 const dynamicHeight = vue.computed(() => {
-  // Jika height diberikan, gunakan nilai tersebut
   if (props.height !== null) {
     return typeof props.height === "number"
       ? `${props.height}px`
