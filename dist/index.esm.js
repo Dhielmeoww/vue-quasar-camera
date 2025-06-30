@@ -1,11 +1,8 @@
-import { ref, computed, onUnmounted, resolveComponent, openBlock, createElementBlock, createCommentVNode, createBlock, normalizeStyle, createElementVNode, toDisplayString, createVNode, withCtx, createTextVNode } from 'vue';
+import { ref, computed, onUnmounted, resolveComponent, openBlock, createElementBlock, createCommentVNode, createBlock, normalizeStyle, createElementVNode, toDisplayString, createVNode } from 'vue';
 import { useQuasar } from 'quasar';
 
 const _hoisted_1 = ["src"];
-const _hoisted_2 = { class: "row items-center" };
-const _hoisted_3 = { style: { position: 'relative', width: '100%' } };
-const _hoisted_4 = ["src"];
-const _hoisted_5 = { class: "row justify-center q-gutter-sm full-width" };
+const _hoisted_2 = { style: { display: 'flex', gap: '8px' } };
 
 // Props
 
@@ -255,7 +252,17 @@ const mediaElementStyle = computed(() => ({
   background: "#000",
 }));
 
-computed(() => ({
+const overlayStyle = {
+  position: "absolute",
+  top: "0",
+  left: "0",
+  right: "0",
+  bottom: "0",
+  zIndex: "10",
+  pointerEvents: "none",
+};
+
+const topControlsStyle = computed(() => ({
   position: "absolute",
   top: "10px",
   left: "10px",
@@ -266,7 +273,7 @@ computed(() => ({
   pointerEvents: "all",
 }));
 
-computed(() => ({
+const flashButtonStyle = computed(() => ({
   width: "36px",
   height: "36px",
   background: flashEnabled.value
@@ -292,7 +299,7 @@ const bottomControlsStyle = computed(() => ({
   pointerEvents: "all",
 }));
 
-const switchButtonStyle = computed(() => ({
+computed(() => ({
   width: "45px",
   height: "45px",
   background: "rgba(0, 0, 0, 0.7)",
@@ -326,7 +333,7 @@ const captureButtonStyle = computed(() => ({
   transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const captureButtonLabelStyle = computed(() => ({
+computed(() => ({
   color: "#fff",
   fontSize: "12px",
   fontWeight: "500",
@@ -391,7 +398,7 @@ const closeButtonStyle = computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogCardStyle = computed(() => ({
+computed(() => ({
   minWidth: props.mode === "inline" ? "300px" : "350px",
   maxWidth: "95vw",
   background: "linear-gradient(145deg, #232526 0%, #414345 100%)",
@@ -402,7 +409,7 @@ const dialogCardStyle = computed(() => ({
   overflow: "hidden",
 }));
 
-const dialogHeaderStyle = computed(() => ({
+computed(() => ({
   background: "rgba(0,0,0,0.7)",
   borderTopLeftRadius: "20px",
   borderTopRightRadius: "20px",
@@ -410,14 +417,7 @@ const dialogHeaderStyle = computed(() => ({
   borderBottom: "1px solid rgba(255,255,255,0.08)",
 }));
 
-const dialogTitleStyle = {
-  color: "white",
-  fontSize: "16px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-};
-
-const dialogCloseButtonStyle = computed(() => ({
+computed(() => ({
   background: "rgba(0,0,0,0.7)",
   border: "1px solid rgba(255,255,255,0.3)",
   borderRadius: "50%",
@@ -425,7 +425,7 @@ const dialogCloseButtonStyle = computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogImageContainerStyle = computed(() => ({
+computed(() => ({
   display: "flex",
   justifyContent: "center",
   background: "linear-gradient(145deg, #000000 0%, #1a1a1a 100%)",
@@ -437,7 +437,7 @@ const dialogImageContainerStyle = computed(() => ({
   position: "relative",
 }));
 
-const dialogImageStyle = computed(() => ({
+computed(() => ({
   width: "100%",
   maxWidth: props.mode === "inline" ? "350px" : "450px",
   height: "auto",
@@ -446,7 +446,7 @@ const dialogImageStyle = computed(() => ({
   margin: "0 auto",
 }));
 
-const imageInfoOverlayStyle = computed(() => ({
+computed(() => ({
   position: "absolute",
   bottom: "8px",
   left: "8px",
@@ -457,19 +457,13 @@ const imageInfoOverlayStyle = computed(() => ({
   border: "1px solid rgba(255, 255, 255, 0.2)",
 }));
 
-const imageInfoTextStyle = {
-  color: "white",
-  fontSize: "12px",
-  fontWeight: "500",
-};
-
-const dialogActionsStyle = computed(() => ({
+computed(() => ({
   background: "rgba(0, 0, 0, 0.3)",
   padding: "15px",
   backdropFilter: "blur(20px)",
 }));
 
-const dialogDownloadButtonStyle = computed(() => ({
+computed(() => ({
   minWidth: "120px",
   height: "40px",
   background: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)",
@@ -482,7 +476,7 @@ const dialogDownloadButtonStyle = computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogRetakeButtonStyle = computed(() => ({
+computed(() => ({
   minWidth: "120px",
   height: "40px",
   background: "linear-gradient(135deg, #f39c12 0%, #e67e22 100%)",
@@ -495,7 +489,7 @@ const dialogRetakeButtonStyle = computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogShareButtonStyle = computed(() => ({
+computed(() => ({
   minWidth: "120px",
   height: "40px",
   background: "linear-gradient(135deg, #3498db 0%, #2980b9 100%)",
@@ -663,11 +657,6 @@ const retakePhoto = async () => {
   }
 };
 
-const retakeFromDialog = () => {
-  resultDialog.value = false;
-  retakePhoto();
-};
-
 const viewCapturedImage = () => {
   resultDialog.value = true;
 };
@@ -748,10 +737,6 @@ const shareImage = async () => {
       timeout: 3000,
     });
   }
-};
-
-const shareImageFromDialog = () => {
-  shareImage();
 };
 
 const toggleRecording = () => {
@@ -907,18 +892,6 @@ const hoverActionButton = (event, isHovering) => {
   }
 };
 
-const hoverDialogButton = (event, isHovering) => {
-  const el = event?.target;
-  if (el) {
-    el.style.transform = isHovering
-      ? "translateY(-2px) scale(1.05)"
-      : "translateY(0) scale(1)";
-    el.style.boxShadow = isHovering
-      ? "0 10px 30px rgba(52, 152, 219, 0.4)"
-      : "none";
-  }
-};
-
 // Expose methods for parent component
 __expose({
   openCamera,
@@ -950,12 +923,6 @@ onUnmounted(() => {
 
 return (_ctx, _cache) => {
   const _component_q_btn = resolveComponent("q-btn");
-  const _component_q_icon = resolveComponent("q-icon");
-  const _component_q_space = resolveComponent("q-space");
-  const _component_q_card_section = resolveComponent("q-card-section");
-  const _component_q_card_actions = resolveComponent("q-card-actions");
-  const _component_q_card = resolveComponent("q-card");
-  const _component_q_dialog = resolveComponent("q-dialog");
 
   return (openBlock(), createElementBlock("div", null, [
     createCommentVNode(" Toggle Button "),
@@ -984,7 +951,7 @@ return (_ctx, _cache) => {
             style: normalizeStyle(cameraFrameStyle.value)
           }, [
             createCommentVNode(" Enhanced Status indicator with pulse animation "),
-            (__props.showStatusIndicator)
+            (__props.showStatusIndicator && capturedImage.value)
               ? (openBlock(), createElementBlock("div", {
                   key: 0,
                   style: normalizeStyle(statusIndicatorStyle.value)
@@ -1012,25 +979,38 @@ return (_ctx, _cache) => {
                   alt: "Captured"
                 }, null, 12 /* STYLE, PROPS */, _hoisted_1)),
             createCommentVNode(" Modern camera overlay with enhanced UI "),
-            createCommentVNode(" <div v-if=\"!capturedImage\" :style=\"overlayStyle\">\r\n          <div :style=\"topControlsStyle\">\r\n            <div :style=\"{ display: 'flex', gap: '8px' }\">\r\n              <q-btn\r\n                round\r\n                flat\r\n                size=\"sm\"\r\n                color=\"white\"\r\n                :icon=\"flashEnabled ? 'flash_on' : 'flash_off'\"\r\n                :style=\"flashButtonStyle\"\r\n                @click=\"toggleFlash\"\r\n                @mouseenter=\"hoverButton($event, true)\"\r\n                @mouseleave=\"hoverButton($event, false)\"\r\n              />\r\n            </div>\r\n          </div>\r\n        </div> "),
-            createCommentVNode(" Bottom controls (capture, switch, etc.) "),
             (!capturedImage.value)
               ? (openBlock(), createElementBlock("div", {
                   key: 3,
+                  style: overlayStyle
+                }, [
+                  createElementVNode("div", {
+                    style: normalizeStyle(topControlsStyle.value)
+                  }, [
+                    createElementVNode("div", _hoisted_2, [
+                      createVNode(_component_q_btn, {
+                        round: "",
+                        flat: "",
+                        size: "sm",
+                        color: "white",
+                        icon: flashEnabled.value ? 'flash_on' : 'flash_off',
+                        style: normalizeStyle(flashButtonStyle.value),
+                        onClick: toggleFlash,
+                        onMouseenter: _cache[2] || (_cache[2] = $event => (hoverButton($event, true))),
+                        onMouseleave: _cache[3] || (_cache[3] = $event => (hoverButton($event, false)))
+                      }, null, 8 /* PROPS */, ["icon", "style"])
+                    ])
+                  ], 4 /* STYLE */)
+                ]))
+              : createCommentVNode("v-if", true),
+            createCommentVNode(" Bottom controls (capture, switch, etc.) "),
+            (!capturedImage.value)
+              ? (openBlock(), createElementBlock("div", {
+                  key: 4,
                   style: normalizeStyle(bottomControlsStyle.value)
                 }, [
                   createCommentVNode(" Switch camera button "),
-                  createVNode(_component_q_btn, {
-                    round: "",
-                    flat: "",
-                    size: "md",
-                    color: "white",
-                    icon: "cameraswitch",
-                    style: normalizeStyle(switchButtonStyle.value),
-                    onClick: switchCamera,
-                    onMouseenter: _cache[2] || (_cache[2] = $event => (hoverButton($event, true))),
-                    onMouseleave: _cache[3] || (_cache[3] = $event => (hoverButton($event, false)))
-                  }, null, 8 /* PROPS */, ["style"]),
+                  createCommentVNode(" <q-btn\r\n            round\r\n            flat\r\n            size=\"md\"\r\n            color=\"white\"\r\n            icon=\"cameraswitch\"\r\n            :style=\"switchButtonStyle\"\r\n            @click=\"switchCamera\"\r\n            @mouseenter=\"hoverButton($event, true)\"\r\n            @mouseleave=\"hoverButton($event, false)\"\r\n          /> "),
                   createCommentVNode(" Capture button "),
                   createElementVNode("div", {
                     style: normalizeStyle(captureButtonContainerStyle.value)
@@ -1042,10 +1022,7 @@ return (_ctx, _cache) => {
                       style: normalizeStyle(captureButtonStyle.value),
                       onClick: capturePhoto,
                       disable: isCapturing.value
-                    }, null, 8 /* PROPS */, ["style", "disable"]),
-                    createElementVNode("span", {
-                      style: normalizeStyle(captureButtonLabelStyle.value)
-                    }, " Capture ", 4 /* STYLE */)
+                    }, null, 8 /* PROPS */, ["style", "disable"])
                   ], 4 /* STYLE */),
                   createCommentVNode(" View button "),
                   (__props.showViewButton && capturedImage.value)
@@ -1067,7 +1044,7 @@ return (_ctx, _cache) => {
             createCommentVNode(" Retake and Download buttons after capture "),
             (capturedImage.value)
               ? (openBlock(), createElementBlock("div", {
-                  key: 4,
+                  key: 5,
                   style: normalizeStyle(postCaptureControlsStyle.value)
                 }, [
                   (__props.showRetakeButton)
@@ -1101,7 +1078,7 @@ return (_ctx, _cache) => {
             createCommentVNode(" Close button "),
             (__props.showCloseButton)
               ? (openBlock(), createBlock(_component_q_btn, {
-                  key: 5,
+                  key: 6,
                   round: "",
                   flat: "",
                   size: "sm",
@@ -1115,131 +1092,6 @@ return (_ctx, _cache) => {
               : createCommentVNode("v-if", true)
           ], 4 /* STYLE */)
         ], 4 /* STYLE */))
-      : createCommentVNode("v-if", true),
-    createCommentVNode(" View Dialog "),
-    (__props.showViewDialog)
-      ? (openBlock(), createBlock(_component_q_dialog, {
-          key: 2,
-          modelValue: resultDialog.value,
-          "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => ((resultDialog).value = $event)),
-          persistent: ""
-        }, {
-          default: withCtx(() => [
-            createVNode(_component_q_card, {
-              style: normalizeStyle(dialogCardStyle.value)
-            }, {
-              default: withCtx(() => [
-                createVNode(_component_q_card_section, {
-                  style: normalizeStyle(dialogHeaderStyle.value)
-                }, {
-                  default: withCtx(() => [
-                    createElementVNode("div", _hoisted_2, [
-                      createVNode(_component_q_icon, {
-                        name: "photo_camera",
-                        color: "white",
-                        size: "28px",
-                        class: "q-mr-sm"
-                      }),
-                      createElementVNode("span", { style: dialogTitleStyle }, toDisplayString(__props.dialogTitle), 1 /* TEXT */),
-                      createVNode(_component_q_space),
-                      (__props.showCloseButton)
-                        ? (openBlock(), createBlock(_component_q_btn, {
-                            key: 0,
-                            round: "",
-                            flat: "",
-                            size: "sm",
-                            color: "white",
-                            icon: "close",
-                            onClick: _cache[12] || (_cache[12] = $event => (resultDialog.value = false)),
-                            style: normalizeStyle(dialogCloseButtonStyle.value),
-                            onMouseenter: _cache[13] || (_cache[13] = $event => (hoverButton($event, true))),
-                            onMouseleave: _cache[14] || (_cache[14] = $event => (hoverButton($event, false)))
-                          }, null, 8 /* PROPS */, ["style"]))
-                        : createCommentVNode("v-if", true)
-                    ])
-                  ]),
-                  _: 1 /* STABLE */
-                }, 8 /* PROPS */, ["style"]),
-                createVNode(_component_q_card_section, { style: { padding: '20px' } }, {
-                  default: withCtx(() => [
-                    createElementVNode("div", {
-                      style: normalizeStyle(dialogImageContainerStyle.value)
-                    }, [
-                      createElementVNode("div", _hoisted_3, [
-                        (capturedImage.value)
-                          ? (openBlock(), createElementBlock("img", {
-                              key: 0,
-                              src: capturedImage.value,
-                              style: normalizeStyle(dialogImageStyle.value),
-                              alt: "Captured Photo"
-                            }, null, 12 /* STYLE, PROPS */, _hoisted_4))
-                          : createCommentVNode("v-if", true),
-                        createCommentVNode(" Image overlay with info "),
-                        createElementVNode("div", {
-                          style: normalizeStyle(imageInfoOverlayStyle.value)
-                        }, [
-                          createElementVNode("span", { style: imageInfoTextStyle }, [
-                            createVNode(_component_q_icon, {
-                              name: "photo",
-                              size: "14px",
-                              class: "q-mr-xs"
-                            }),
-                            _cache[22] || (_cache[22] = createTextVNode(" High Quality "))
-                          ])
-                        ], 4 /* STYLE */)
-                      ])
-                    ], 4 /* STYLE */)
-                  ]),
-                  _: 1 /* STABLE */
-                }),
-                createVNode(_component_q_card_actions, {
-                  style: normalizeStyle(dialogActionsStyle.value)
-                }, {
-                  default: withCtx(() => [
-                    createElementVNode("div", _hoisted_5, [
-                      (__props.showDownloadInDialog)
-                        ? (openBlock(), createBlock(_component_q_btn, {
-                            key: 0,
-                            color: "positive",
-                            label: "Download",
-                            onClick: downloadImage,
-                            icon: "download",
-                            style: normalizeStyle(dialogDownloadButtonStyle.value),
-                            push: "",
-                            onMouseenter: _cache[15] || (_cache[15] = $event => (hoverDialogButton($event, true))),
-                            onMouseleave: _cache[16] || (_cache[16] = $event => (hoverDialogButton($event, false)))
-                          }, null, 8 /* PROPS */, ["style"]))
-                        : createCommentVNode("v-if", true),
-                      createVNode(_component_q_btn, {
-                        color: "secondary",
-                        label: "Retake",
-                        onClick: retakeFromDialog,
-                        icon: "refresh",
-                        style: normalizeStyle(dialogRetakeButtonStyle.value),
-                        push: "",
-                        onMouseenter: _cache[17] || (_cache[17] = $event => (hoverDialogButton($event, true))),
-                        onMouseleave: _cache[18] || (_cache[18] = $event => (hoverDialogButton($event, false)))
-                      }, null, 8 /* PROPS */, ["style"]),
-                      createVNode(_component_q_btn, {
-                        color: "info",
-                        label: "Share",
-                        onClick: shareImageFromDialog,
-                        icon: "share",
-                        style: normalizeStyle(dialogShareButtonStyle.value),
-                        push: "",
-                        onMouseenter: _cache[19] || (_cache[19] = $event => (hoverDialogButton($event, true))),
-                        onMouseleave: _cache[20] || (_cache[20] = $event => (hoverDialogButton($event, false)))
-                      }, null, 8 /* PROPS */, ["style"])
-                    ])
-                  ]),
-                  _: 1 /* STABLE */
-                }, 8 /* PROPS */, ["style"])
-              ]),
-              _: 1 /* STABLE */
-            }, 8 /* PROPS */, ["style"])
-          ]),
-          _: 1 /* STABLE */
-        }, 8 /* PROPS */, ["modelValue"]))
       : createCommentVNode("v-if", true)
   ]))
 }

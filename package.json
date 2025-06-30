@@ -27,14 +27,17 @@
   "author": "Your Name",
   "license": "MIT",
   "peerDependencies": {
+    "@quasar/extras": "^1.0.0",
     "quasar": "^2.0.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@quasar/extras": "^1.17.0",
     "@rollup/plugin-commonjs": "^25.0.8",
     "@rollup/plugin-node-resolve": "^15.3.1",
     "@rollup/plugin-typescript": "^11.0.0",
     "@vue/compiler-sfc": "^3.5.17",
+    "quasar": "^2.18.1",
     "rollup": "^3.29.5",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-vue": "^6.0.0",

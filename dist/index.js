@@ -6,10 +6,7 @@ var vue = require('vue');
 var quasar = require('quasar');
 
 const _hoisted_1 = ["src"];
-const _hoisted_2 = { class: "row items-center" };
-const _hoisted_3 = { style: { position: 'relative', width: '100%' } };
-const _hoisted_4 = ["src"];
-const _hoisted_5 = { class: "row justify-center q-gutter-sm full-width" };
+const _hoisted_2 = { style: { display: 'flex', gap: '8px' } };
 
 // Props
 
@@ -259,7 +256,17 @@ const mediaElementStyle = vue.computed(() => ({
   background: "#000",
 }));
 
-vue.computed(() => ({
+const overlayStyle = {
+  position: "absolute",
+  top: "0",
+  left: "0",
+  right: "0",
+  bottom: "0",
+  zIndex: "10",
+  pointerEvents: "none",
+};
+
+const topControlsStyle = vue.computed(() => ({
   position: "absolute",
   top: "10px",
   left: "10px",
@@ -270,7 +277,7 @@ vue.computed(() => ({
   pointerEvents: "all",
 }));
 
-vue.computed(() => ({
+const flashButtonStyle = vue.computed(() => ({
   width: "36px",
   height: "36px",
   background: flashEnabled.value
@@ -296,7 +303,7 @@ const bottomControlsStyle = vue.computed(() => ({
   pointerEvents: "all",
 }));
 
-const switchButtonStyle = vue.computed(() => ({
+vue.computed(() => ({
   width: "45px",
   height: "45px",
   background: "rgba(0, 0, 0, 0.7)",
@@ -330,7 +337,7 @@ const captureButtonStyle = vue.computed(() => ({
   transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const captureButtonLabelStyle = vue.computed(() => ({
+vue.computed(() => ({
   color: "#fff",
   fontSize: "12px",
   fontWeight: "500",
@@ -395,7 +402,7 @@ const closeButtonStyle = vue.computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogCardStyle = vue.computed(() => ({
+vue.computed(() => ({
   minWidth: props.mode === "inline" ? "300px" : "350px",
   maxWidth: "95vw",
   background: "linear-gradient(145deg, #232526 0%, #414345 100%)",
@@ -406,7 +413,7 @@ const dialogCardStyle = vue.computed(() => ({
   overflow: "hidden",
 }));
 
-const dialogHeaderStyle = vue.computed(() => ({
+vue.computed(() => ({
   background: "rgba(0,0,0,0.7)",
   borderTopLeftRadius: "20px",
   borderTopRightRadius: "20px",
@@ -414,14 +421,7 @@ const dialogHeaderStyle = vue.computed(() => ({
   borderBottom: "1px solid rgba(255,255,255,0.08)",
 }));
 
-const dialogTitleStyle = {
-  color: "white",
-  fontSize: "16px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-};
-
-const dialogCloseButtonStyle = vue.computed(() => ({
+vue.computed(() => ({
   background: "rgba(0,0,0,0.7)",
   border: "1px solid rgba(255,255,255,0.3)",
   borderRadius: "50%",
@@ -429,7 +429,7 @@ const dialogCloseButtonStyle = vue.computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogImageContainerStyle = vue.computed(() => ({
+vue.computed(() => ({
   display: "flex",
   justifyContent: "center",
   background: "linear-gradient(145deg, #000000 0%, #1a1a1a 100%)",
@@ -441,7 +441,7 @@ const dialogImageContainerStyle = vue.computed(() => ({
   position: "relative",
 }));
 
-const dialogImageStyle = vue.computed(() => ({
+vue.computed(() => ({
   width: "100%",
   maxWidth: props.mode === "inline" ? "350px" : "450px",
   height: "auto",
@@ -450,7 +450,7 @@ const dialogImageStyle = vue.computed(() => ({
   margin: "0 auto",
 }));
 
-const imageInfoOverlayStyle = vue.computed(() => ({
+vue.computed(() => ({
   position: "absolute",
   bottom: "8px",
   left: "8px",
@@ -461,19 +461,13 @@ const imageInfoOverlayStyle = vue.computed(() => ({
   border: "1px solid rgba(255, 255, 255, 0.2)",
 }));
 
-const imageInfoTextStyle = {
-  color: "white",
-  fontSize: "12px",
-  fontWeight: "500",
-};
-
-const dialogActionsStyle = vue.computed(() => ({
+vue.computed(() => ({
   background: "rgba(0, 0, 0, 0.3)",
   padding: "15px",
   backdropFilter: "blur(20px)",
 }));
 
-const dialogDownloadButtonStyle = vue.computed(() => ({
+vue.computed(() => ({
   minWidth: "120px",
   height: "40px",
   background: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)",
@@ -486,7 +480,7 @@ const dialogDownloadButtonStyle = vue.computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogRetakeButtonStyle = vue.computed(() => ({
+vue.computed(() => ({
   minWidth: "120px",
   height: "40px",
   background: "linear-gradient(135deg, #f39c12 0%, #e67e22 100%)",
@@ -499,7 +493,7 @@ const dialogRetakeButtonStyle = vue.computed(() => ({
   transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
-const dialogShareButtonStyle = vue.computed(() => ({
+vue.computed(() => ({
   minWidth: "120px",
   height: "40px",
   background: "linear-gradient(135deg, #3498db 0%, #2980b9 100%)",
@@ -667,11 +661,6 @@ const retakePhoto = async () => {
   }
 };
 
-const retakeFromDialog = () => {
-  resultDialog.value = false;
-  retakePhoto();
-};
-
 const viewCapturedImage = () => {
   resultDialog.value = true;
 };
@@ -752,10 +741,6 @@ const shareImage = async () => {
       timeout: 3000,
     });
   }
-};
-
-const shareImageFromDialog = () => {
-  shareImage();
 };
 
 const toggleRecording = () => {
@@ -911,18 +896,6 @@ const hoverActionButton = (event, isHovering) => {
   }
 };
 
-const hoverDialogButton = (event, isHovering) => {
-  const el = event?.target;
-  if (el) {
-    el.style.transform = isHovering
-      ? "translateY(-2px) scale(1.05)"
-      : "translateY(0) scale(1)";
-    el.style.boxShadow = isHovering
-      ? "0 10px 30px rgba(52, 152, 219, 0.4)"
-      : "none";
-  }
-};
-
 // Expose methods for parent component
 __expose({
   openCamera,
@@ -954,12 +927,6 @@ vue.onUnmounted(() => {
 
 return (_ctx, _cache) => {
   const _component_q_btn = vue.resolveComponent("q-btn");
-  const _component_q_icon = vue.resolveComponent("q-icon");
-  const _component_q_space = vue.resolveComponent("q-space");
-  const _component_q_card_section = vue.resolveComponent("q-card-section");
-  const _component_q_card_actions = vue.resolveComponent("q-card-actions");
-  const _component_q_card = vue.resolveComponent("q-card");
-  const _component_q_dialog = vue.resolveComponent("q-dialog");
 
   return (vue.openBlock(), vue.createElementBlock("div", null, [
     vue.createCommentVNode(" Toggle Button "),
@@ -988,7 +955,7 @@ return (_ctx, _cache) => {
             style: vue.normalizeStyle(cameraFrameStyle.value)
           }, [
             vue.createCommentVNode(" Enhanced Status indicator with pulse animation "),
-            (__props.showStatusIndicator)
+            (__props.showStatusIndicator && capturedImage.value)
               ? (vue.openBlock(), vue.createElementBlock("div", {
                   key: 0,
                   style: vue.normalizeStyle(statusIndicatorStyle.value)
@@ -1016,25 +983,38 @@ return (_ctx, _cache) => {
                   alt: "Captured"
                 }, null, 12 /* STYLE, PROPS */, _hoisted_1)),
             vue.createCommentVNode(" Modern camera overlay with enhanced UI "),
-            vue.createCommentVNode(" <div v-if=\"!capturedImage\" :style=\"overlayStyle\">\r\n          <div :style=\"topControlsStyle\">\r\n            <div :style=\"{ display: 'flex', gap: '8px' }\">\r\n              <q-btn\r\n                round\r\n                flat\r\n                size=\"sm\"\r\n                color=\"white\"\r\n                :icon=\"flashEnabled ? 'flash_on' : 'flash_off'\"\r\n                :style=\"flashButtonStyle\"\r\n                @click=\"toggleFlash\"\r\n                @mouseenter=\"hoverButton($event, true)\"\r\n                @mouseleave=\"hoverButton($event, false)\"\r\n              />\r\n            </div>\r\n          </div>\r\n        </div> "),
-            vue.createCommentVNode(" Bottom controls (capture, switch, etc.) "),
             (!capturedImage.value)
               ? (vue.openBlock(), vue.createElementBlock("div", {
                   key: 3,
+                  style: overlayStyle
+                }, [
+                  vue.createElementVNode("div", {
+                    style: vue.normalizeStyle(topControlsStyle.value)
+                  }, [
+                    vue.createElementVNode("div", _hoisted_2, [
+                      vue.createVNode(_component_q_btn, {
+                        round: "",
+                        flat: "",
+                        size: "sm",
+                        color: "white",
+                        icon: flashEnabled.value ? 'flash_on' : 'flash_off',
+                        style: vue.normalizeStyle(flashButtonStyle.value),
+                        onClick: toggleFlash,
+                        onMouseenter: _cache[2] || (_cache[2] = $event => (hoverButton($event, true))),
+                        onMouseleave: _cache[3] || (_cache[3] = $event => (hoverButton($event, false)))
+                      }, null, 8 /* PROPS */, ["icon", "style"])
+                    ])
+                  ], 4 /* STYLE */)
+                ]))
+              : vue.createCommentVNode("v-if", true),
+            vue.createCommentVNode(" Bottom controls (capture, switch, etc.) "),
+            (!capturedImage.value)
+              ? (vue.openBlock(), vue.createElementBlock("div", {
+                  key: 4,
                   style: vue.normalizeStyle(bottomControlsStyle.value)
                 }, [
                   vue.createCommentVNode(" Switch camera button "),
-                  vue.createVNode(_component_q_btn, {
-                    round: "",
-                    flat: "",
-                    size: "md",
-                    color: "white",
-                    icon: "cameraswitch",
-                    style: vue.normalizeStyle(switchButtonStyle.value),
-                    onClick: switchCamera,
-                    onMouseenter: _cache[2] || (_cache[2] = $event => (hoverButton($event, true))),
-                    onMouseleave: _cache[3] || (_cache[3] = $event => (hoverButton($event, false)))
-                  }, null, 8 /* PROPS */, ["style"]),
+                  vue.createCommentVNode(" <q-btn\r\n            round\r\n            flat\r\n            size=\"md\"\r\n            color=\"white\"\r\n            icon=\"cameraswitch\"\r\n            :style=\"switchButtonStyle\"\r\n            @click=\"switchCamera\"\r\n            @mouseenter=\"hoverButton($event, true)\"\r\n            @mouseleave=\"hoverButton($event, false)\"\r\n          /> "),
                   vue.createCommentVNode(" Capture button "),
                   vue.createElementVNode("div", {
                     style: vue.normalizeStyle(captureButtonContainerStyle.value)
@@ -1046,10 +1026,7 @@ return (_ctx, _cache) => {
                       style: vue.normalizeStyle(captureButtonStyle.value),
                       onClick: capturePhoto,
                       disable: isCapturing.value
-                    }, null, 8 /* PROPS */, ["style", "disable"]),
-                    vue.createElementVNode("span", {
-                      style: vue.normalizeStyle(captureButtonLabelStyle.value)
-                    }, " Capture ", 4 /* STYLE */)
+                    }, null, 8 /* PROPS */, ["style", "disable"])
                   ], 4 /* STYLE */),
                   vue.createCommentVNode(" View button "),
                   (__props.showViewButton && capturedImage.value)
@@ -1071,7 +1048,7 @@ return (_ctx, _cache) => {
             vue.createCommentVNode(" Retake and Download buttons after capture "),
             (capturedImage.value)
               ? (vue.openBlock(), vue.createElementBlock("div", {
-                  key: 4,
+                  key: 5,
                   style: vue.normalizeStyle(postCaptureControlsStyle.value)
                 }, [
                   (__props.showRetakeButton)
@@ -1105,7 +1082,7 @@ return (_ctx, _cache) => {
             vue.createCommentVNode(" Close button "),
             (__props.showCloseButton)
               ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
-                  key: 5,
+                  key: 6,
                   round: "",
                   flat: "",
                   size: "sm",
@@ -1119,131 +1096,6 @@ return (_ctx, _cache) => {
               : vue.createCommentVNode("v-if", true)
           ], 4 /* STYLE */)
         ], 4 /* STYLE */))
-      : vue.createCommentVNode("v-if", true),
-    vue.createCommentVNode(" View Dialog "),
-    (__props.showViewDialog)
-      ? (vue.openBlock(), vue.createBlock(_component_q_dialog, {
-          key: 2,
-          modelValue: resultDialog.value,
-          "onUpdate:modelValue": _cache[21] || (_cache[21] = $event => ((resultDialog).value = $event)),
-          persistent: ""
-        }, {
-          default: vue.withCtx(() => [
-            vue.createVNode(_component_q_card, {
-              style: vue.normalizeStyle(dialogCardStyle.value)
-            }, {
-              default: vue.withCtx(() => [
-                vue.createVNode(_component_q_card_section, {
-                  style: vue.normalizeStyle(dialogHeaderStyle.value)
-                }, {
-                  default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_2, [
-                      vue.createVNode(_component_q_icon, {
-                        name: "photo_camera",
-                        color: "white",
-                        size: "28px",
-                        class: "q-mr-sm"
-                      }),
-                      vue.createElementVNode("span", { style: dialogTitleStyle }, vue.toDisplayString(__props.dialogTitle), 1 /* TEXT */),
-                      vue.createVNode(_component_q_space),
-                      (__props.showCloseButton)
-                        ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
-                            key: 0,
-                            round: "",
-                            flat: "",
-                            size: "sm",
-                            color: "white",
-                            icon: "close",
-                            onClick: _cache[12] || (_cache[12] = $event => (resultDialog.value = false)),
-                            style: vue.normalizeStyle(dialogCloseButtonStyle.value),
-                            onMouseenter: _cache[13] || (_cache[13] = $event => (hoverButton($event, true))),
-                            onMouseleave: _cache[14] || (_cache[14] = $event => (hoverButton($event, false)))
-                          }, null, 8 /* PROPS */, ["style"]))
-                        : vue.createCommentVNode("v-if", true)
-                    ])
-                  ]),
-                  _: 1 /* STABLE */
-                }, 8 /* PROPS */, ["style"]),
-                vue.createVNode(_component_q_card_section, { style: { padding: '20px' } }, {
-                  default: vue.withCtx(() => [
-                    vue.createElementVNode("div", {
-                      style: vue.normalizeStyle(dialogImageContainerStyle.value)
-                    }, [
-                      vue.createElementVNode("div", _hoisted_3, [
-                        (capturedImage.value)
-                          ? (vue.openBlock(), vue.createElementBlock("img", {
-                              key: 0,
-                              src: capturedImage.value,
-                              style: vue.normalizeStyle(dialogImageStyle.value),
-                              alt: "Captured Photo"
-                            }, null, 12 /* STYLE, PROPS */, _hoisted_4))
-                          : vue.createCommentVNode("v-if", true),
-                        vue.createCommentVNode(" Image overlay with info "),
-                        vue.createElementVNode("div", {
-                          style: vue.normalizeStyle(imageInfoOverlayStyle.value)
-                        }, [
-                          vue.createElementVNode("span", { style: imageInfoTextStyle }, [
-                            vue.createVNode(_component_q_icon, {
-                              name: "photo",
-                              size: "14px",
-                              class: "q-mr-xs"
-                            }),
-                            _cache[22] || (_cache[22] = vue.createTextVNode(" High Quality "))
-                          ])
-                        ], 4 /* STYLE */)
-                      ])
-                    ], 4 /* STYLE */)
-                  ]),
-                  _: 1 /* STABLE */
-                }),
-                vue.createVNode(_component_q_card_actions, {
-                  style: vue.normalizeStyle(dialogActionsStyle.value)
-                }, {
-                  default: vue.withCtx(() => [
-                    vue.createElementVNode("div", _hoisted_5, [
-                      (__props.showDownloadInDialog)
-                        ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
-                            key: 0,
-                            color: "positive",
-                            label: "Download",
-                            onClick: downloadImage,
-                            icon: "download",
-                            style: vue.normalizeStyle(dialogDownloadButtonStyle.value),
-                            push: "",
-                            onMouseenter: _cache[15] || (_cache[15] = $event => (hoverDialogButton($event, true))),
-                            onMouseleave: _cache[16] || (_cache[16] = $event => (hoverDialogButton($event, false)))
-                          }, null, 8 /* PROPS */, ["style"]))
-                        : vue.createCommentVNode("v-if", true),
-                      vue.createVNode(_component_q_btn, {
-                        color: "secondary",
-                        label: "Retake",
-                        onClick: retakeFromDialog,
-                        icon: "refresh",
-                        style: vue.normalizeStyle(dialogRetakeButtonStyle.value),
-                        push: "",
-                        onMouseenter: _cache[17] || (_cache[17] = $event => (hoverDialogButton($event, true))),
-                        onMouseleave: _cache[18] || (_cache[18] = $event => (hoverDialogButton($event, false)))
-                      }, null, 8 /* PROPS */, ["style"]),
-                      vue.createVNode(_component_q_btn, {
-                        color: "info",
-                        label: "Share",
-                        onClick: shareImageFromDialog,
-                        icon: "share",
-                        style: vue.normalizeStyle(dialogShareButtonStyle.value),
-                        push: "",
-                        onMouseenter: _cache[19] || (_cache[19] = $event => (hoverDialogButton($event, true))),
-                        onMouseleave: _cache[20] || (_cache[20] = $event => (hoverDialogButton($event, false)))
-                      }, null, 8 /* PROPS */, ["style"])
-                    ])
-                  ]),
-                  _: 1 /* STABLE */
-                }, 8 /* PROPS */, ["style"])
-              ]),
-              _: 1 /* STABLE */
-            }, 8 /* PROPS */, ["style"])
-          ]),
-          _: 1 /* STABLE */
-        }, 8 /* PROPS */, ["modelValue"]))
       : vue.createCommentVNode("v-if", true)
   ]))
 }

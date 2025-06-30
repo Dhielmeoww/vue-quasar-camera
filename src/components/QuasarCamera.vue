@@ -19,7 +19,10 @@
     <div v-if="isOpen" :style="cameraContainerStyle">
       <div :style="cameraFrameStyle">
         <!-- Enhanced Status indicator with pulse animation -->
-        <div v-if="showStatusIndicator" :style="statusIndicatorStyle">
+        <div
+          v-if="showStatusIndicator && capturedImage"
+          :style="statusIndicatorStyle"
+        >
           <div :style="statusDotStyle"></div>
           <span :style="statusTextStyle">
             {{ capturedImage ? "CAPTURED" : "LIVE" }}
@@ -42,7 +45,7 @@
         />
 
         <!-- Modern camera overlay with enhanced UI -->
-        <!-- <div v-if="!capturedImage" :style="overlayStyle">
+        <div v-if="!capturedImage" :style="overlayStyle">
           <div :style="topControlsStyle">
             <div :style="{ display: 'flex', gap: '8px' }">
               <q-btn
@@ -58,12 +61,12 @@
               />
             </div>
           </div>
-        </div> -->
+        </div>
 
         <!-- Bottom controls (capture, switch, etc.) -->
         <div v-if="!capturedImage" :style="bottomControlsStyle">
           <!-- Switch camera button -->
-          <q-btn
+          <!-- <q-btn
             round
             flat
             size="md"
@@ -73,7 +76,7 @@
             @click="switchCamera"
             @mouseenter="hoverButton($event, true)"
             @mouseleave="hoverButton($event, false)"
-          />
+          /> -->
 
           <!-- Capture button -->
           <div :style="captureButtonContainerStyle">
@@ -85,7 +88,6 @@
               @click="capturePhoto"
               :disable="isCapturing"
             />
-            <span :style="captureButtonLabelStyle"> Capture </span>
           </div>
 
           <!-- View button -->
@@ -145,97 +147,6 @@
         />
       </div>
     </div>
-
-    <!-- View Dialog -->
-    <q-dialog v-model="resultDialog" persistent v-if="showViewDialog">
-      <q-card :style="dialogCardStyle">
-        <q-card-section :style="dialogHeaderStyle">
-          <div class="row items-center">
-            <q-icon
-              name="photo_camera"
-              color="white"
-              size="28px"
-              class="q-mr-sm"
-            />
-            <span :style="dialogTitleStyle">
-              {{ dialogTitle }}
-            </span>
-            <q-space />
-            <q-btn
-              v-if="showCloseButton"
-              round
-              flat
-              size="sm"
-              color="white"
-              icon="close"
-              @click="resultDialog = false"
-              :style="dialogCloseButtonStyle"
-              @mouseenter="hoverButton($event, true)"
-              @mouseleave="hoverButton($event, false)"
-            />
-          </div>
-        </q-card-section>
-
-        <q-card-section :style="{ padding: '20px' }">
-          <div :style="dialogImageContainerStyle">
-            <div :style="{ position: 'relative', width: '100%' }">
-              <img
-                v-if="capturedImage"
-                :src="capturedImage"
-                :style="dialogImageStyle"
-                alt="Captured Photo"
-              />
-
-              <!-- Image overlay with info -->
-              <div :style="imageInfoOverlayStyle">
-                <span :style="imageInfoTextStyle">
-                  <q-icon name="photo" size="14px" class="q-mr-xs" />
-                  High Quality
-                </span>
-              </div>
-            </div>
-          </div>
-        </q-card-section>
-
-        <q-card-actions :style="dialogActionsStyle">
-          <div class="row justify-center q-gutter-sm full-width">
-            <q-btn
-              v-if="showDownloadInDialog"
-              color="positive"
-              label="Download"
-              @click="downloadImage"
-              icon="download"
-              :style="dialogDownloadButtonStyle"
-              push
-              @mouseenter="hoverDialogButton($event, true)"
-              @mouseleave="hoverDialogButton($event, false)"
-            />
-
-            <q-btn
-              color="secondary"
-              label="Retake"
-              @click="retakeFromDialog"
-              icon="refresh"
-              :style="dialogRetakeButtonStyle"
-              push
-              @mouseenter="hoverDialogButton($event, true)"
-              @mouseleave="hoverDialogButton($event, false)"
-            />
-
-            <q-btn
-              color="info"
-              label="Share"
-              @click="shareImageFromDialog"
-              icon="share"
-              :style="dialogShareButtonStyle"
-              push
-              @mouseenter="hoverDialogButton($event, true)"
-              @mouseleave="hoverDialogButton($event, false)"
-            />
-          </div>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
 

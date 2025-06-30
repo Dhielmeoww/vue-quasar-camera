@@ -6,7 +6,7 @@ import postcss from 'rollup-plugin-postcss'
 
 export default defineConfig({
     input: 'src/index.js',
-    external: ['vue', 'quasar'],
+    external: ['vue', 'quasar', '@quasar/extras'],
     output: [
         {
             file: 'dist/index.js',
