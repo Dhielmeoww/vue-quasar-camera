@@ -82,6 +82,7 @@
           <div :style="captureButtonContainerStyle">
             <q-btn
               round
+              size="md"
               color="white"
               icon="photo_camera"
               :style="captureButtonStyle"
@@ -108,25 +109,12 @@
         <!-- Retake and Download buttons after capture -->
         <div v-if="capturedImage" :style="postCaptureControlsStyle">
           <q-btn
-            v-if="showRetakeButton"
-            color="warning"
-            label="Retake"
+            round
+            size="md"
+            color="primary"
             icon="refresh"
-            :style="retakeButtonStyle"
-            push
             @click="retakePhoto"
-            @mouseenter="hoverActionButton($event, true)"
-            @mouseleave="hoverActionButton($event, false)"
-          />
-
-          <q-btn
-            v-if="showDownloadButton"
-            color="positive"
-            label="Download"
-            icon="download"
-            :style="downloadButtonStyle"
-            push
-            @click="downloadImage"
+            :style="{ margin: '0 8px' }"
             @mouseenter="hoverActionButton($event, true)"
             @mouseleave="hoverActionButton($event, false)"
           />
@@ -152,7 +140,7 @@
 
 <script setup>
 import { ref, onUnmounted, computed } from "vue";
-import { useQuasar } from "quasar";
+import { useQuasar, QBtn } from "quasar";
 
 // Props
 const props = defineProps({
@@ -164,11 +152,11 @@ const props = defineProps({
   },
   width: {
     type: [String, Number],
-    default: 350,
+    default: null,
   },
   height: {
     type: [String, Number],
-    default: 260,
+    default: null,
   },
 
   // Button texts
@@ -290,6 +278,26 @@ const toggleButtonStyle = computed(() => ({
   letterSpacing: "0.5px",
 }));
 
+const dynamicWidth = computed(() => {
+  // Jika width diberikan, gunakan nilai tersebut
+  if (props.width !== null) {
+    return typeof props.width === "number" ? `${props.width}px` : props.width;
+  }
+  // Jika tidak, kembalikan nilai default berdasarkan mode
+  return props.mode === "fullscreen" ? "100%" : "350px";
+});
+
+const dynamicHeight = computed(() => {
+  // Jika height diberikan, gunakan nilai tersebut
+  if (props.height !== null) {
+    return typeof props.height === "number"
+      ? `${props.height}px`
+      : props.height;
+  }
+  // Jika tidak, kembalikan nilai default berdasarkan mode
+  return props.mode === "fullscreen" ? "100%" : "260px";
+});
+
 const cameraContainerStyle = computed(() => ({
   position:
     props.mode === "corner"
@@ -312,18 +320,8 @@ const cameraContainerStyle = computed(() => ({
       : props.mode === "fullscreen"
       ? "2000"
       : "auto",
-  width:
-    props.mode === "corner"
-      ? "350px"
-      : props.mode === "fullscreen"
-      ? "100%"
-      : "100%",
-  height:
-    props.mode === "corner"
-      ? "260px"
-      : props.mode === "fullscreen"
-      ? "100%"
-      : "auto",
+  width: dynamicWidth.value, // Menggunakan computed width
+  height: dynamicHeight.value, // Menggunakan computed height
   margin: props.mode === "inline" ? "10px 0" : "0",
   background:
     props.mode === "fullscreen" ? "rgba(0, 0, 0, 0.95)" : "transparent",
@@ -341,18 +339,8 @@ const cameraFrameStyle = computed(() => ({
   boxShadow:
     "0 25px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
   border: "3px solid rgba(255, 255, 255, 0.1)",
-  width:
-    props.mode === "corner"
-      ? "100%"
-      : props.mode === "inline"
-      ? "100%"
-      : "85vw",
-  height:
-    props.mode === "corner"
-      ? "100%"
-      : props.mode === "inline"
-      ? "100%"
-      : "75vh",
+  width: "100%", // Selalu 100% dari container
+  height: "100%", // Selalu 100% dari container
   maxWidth: props.mode === "fullscreen" ? "900px" : "none",
   maxHeight: props.mode === "fullscreen" ? "700px" : "none",
   backdropFilter: "blur(20px)",
@@ -460,8 +448,8 @@ const captureButtonContainerStyle = computed(() => ({
 }));
 
 const captureButtonStyle = computed(() => ({
-  width: "60px",
-  height: "60px",
+  width: props.mode === "inline" ? "40px" : "60px",
+  height: props.mode === "inline" ? "40px" : "60px",
   background: isCapturing.value
     ? "rgba(52, 152, 219, 0.8)"
     : "rgba(255,255,255,0.95)",
@@ -472,7 +460,7 @@ const captureButtonStyle = computed(() => ({
     : "0 8px 32px rgba(31, 38, 135, 0.37)",
   animation: isCapturing.value ? "captureRing 0.5s" : "none",
   color: isCapturing.value ? "#fff" : "#3498db",
-  fontSize: "28px",
+  fontSize: props.mode === "inline" ? "22px" : "28px",
   transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
@@ -494,27 +482,21 @@ const viewButtonStyle = computed(() => ({
 
 const postCaptureControlsStyle = computed(() => ({
   position: "absolute",
-  left: "0",
-  right: "0",
-  bottom: "15px",
+  left: "50%",
+  bottom: props.mode === "inline" ? "15px" : "25px",
+  transform: "translateX(-50%)",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   gap: "15px",
-  zIndex: "20",
+  zIndex: "25", // Pastikan z-index lebih tinggi
   pointerEvents: "all",
-}));
-
-const retakeButtonStyle = computed(() => ({
-  minWidth: "100px",
-  height: "40px",
-  background: "linear-gradient(135deg, #f39c12 0%, #e67e22 100%)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+  minHeight: props.mode === "inline" ? "50px" : "60px",
+  padding: props.mode === "inline" ? "8px 16px" : "12px 20px",
+  background: "rgba(0, 0, 0, 0.3)", // Background semi transparan
+  borderRadius: "30px",
+  backdropFilter: "blur(10px)",
+  border: "1px solid rgba(255, 255, 255, 0.1)",
 }));
 
 const downloadButtonStyle = computed(() => ({

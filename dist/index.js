@@ -21,11 +21,11 @@ var script = {
   },
   width: {
     type: [String, Number],
-    default: 350,
+    default: null,
   },
   height: {
     type: [String, Number],
-    default: 260,
+    default: null,
   },
 
   // Button texts
@@ -151,6 +151,26 @@ const toggleButtonStyle = vue.computed(() => ({
   letterSpacing: "0.5px",
 }));
 
+const dynamicWidth = vue.computed(() => {
+  // Jika width diberikan, gunakan nilai tersebut
+  if (props.width !== null) {
+    return typeof props.width === "number" ? `${props.width}px` : props.width;
+  }
+  // Jika tidak, kembalikan nilai default berdasarkan mode
+  return props.mode === "fullscreen" ? "100%" : "350px";
+});
+
+const dynamicHeight = vue.computed(() => {
+  // Jika height diberikan, gunakan nilai tersebut
+  if (props.height !== null) {
+    return typeof props.height === "number"
+      ? `${props.height}px`
+      : props.height;
+  }
+  // Jika tidak, kembalikan nilai default berdasarkan mode
+  return props.mode === "fullscreen" ? "100%" : "260px";
+});
+
 const cameraContainerStyle = vue.computed(() => ({
   position:
     props.mode === "corner"
@@ -173,18 +193,8 @@ const cameraContainerStyle = vue.computed(() => ({
       : props.mode === "fullscreen"
       ? "2000"
       : "auto",
-  width:
-    props.mode === "corner"
-      ? "350px"
-      : props.mode === "fullscreen"
-      ? "100%"
-      : "100%",
-  height:
-    props.mode === "corner"
-      ? "260px"
-      : props.mode === "fullscreen"
-      ? "100%"
-      : "auto",
+  width: dynamicWidth.value, // Menggunakan computed width
+  height: dynamicHeight.value, // Menggunakan computed height
   margin: props.mode === "inline" ? "10px 0" : "0",
   background:
     props.mode === "fullscreen" ? "rgba(0, 0, 0, 0.95)" : "transparent",
@@ -202,18 +212,8 @@ const cameraFrameStyle = vue.computed(() => ({
   boxShadow:
     "0 25px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
   border: "3px solid rgba(255, 255, 255, 0.1)",
-  width:
-    props.mode === "corner"
-      ? "100%"
-      : props.mode === "inline"
-      ? "100%"
-      : "85vw",
-  height:
-    props.mode === "corner"
-      ? "100%"
-      : props.mode === "inline"
-      ? "100%"
-      : "75vh",
+  width: "100%", // Selalu 100% dari container
+  height: "100%", // Selalu 100% dari container
   maxWidth: props.mode === "fullscreen" ? "900px" : "none",
   maxHeight: props.mode === "fullscreen" ? "700px" : "none",
   backdropFilter: "blur(20px)",
@@ -321,8 +321,8 @@ const captureButtonContainerStyle = vue.computed(() => ({
 }));
 
 const captureButtonStyle = vue.computed(() => ({
-  width: "60px",
-  height: "60px",
+  width: props.mode === "inline" ? "40px" : "60px",
+  height: props.mode === "inline" ? "40px" : "60px",
   background: isCapturing.value
     ? "rgba(52, 152, 219, 0.8)"
     : "rgba(255,255,255,0.95)",
@@ -333,7 +333,7 @@ const captureButtonStyle = vue.computed(() => ({
     : "0 8px 32px rgba(31, 38, 135, 0.37)",
   animation: isCapturing.value ? "captureRing 0.5s" : "none",
   color: isCapturing.value ? "#fff" : "#3498db",
-  fontSize: "28px",
+  fontSize: props.mode === "inline" ? "22px" : "28px",
   transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
@@ -355,30 +355,24 @@ const viewButtonStyle = vue.computed(() => ({
 
 const postCaptureControlsStyle = vue.computed(() => ({
   position: "absolute",
-  left: "0",
-  right: "0",
-  bottom: "15px",
+  left: "50%",
+  bottom: props.mode === "inline" ? "15px" : "25px",
+  transform: "translateX(-50%)",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   gap: "15px",
-  zIndex: "20",
+  zIndex: "25", // Pastikan z-index lebih tinggi
   pointerEvents: "all",
+  minHeight: props.mode === "inline" ? "50px" : "60px",
+  padding: props.mode === "inline" ? "8px 16px" : "12px 20px",
+  background: "rgba(0, 0, 0, 0.3)", // Background semi transparan
+  borderRadius: "30px",
+  backdropFilter: "blur(10px)",
+  border: "1px solid rgba(255, 255, 255, 0.1)",
 }));
 
-const retakeButtonStyle = vue.computed(() => ({
-  minWidth: "100px",
-  height: "40px",
-  background: "linear-gradient(135deg, #f39c12 0%, #e67e22 100%)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-const downloadButtonStyle = vue.computed(() => ({
+vue.computed(() => ({
   minWidth: "100px",
   height: "40px",
   background: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)",
@@ -822,12 +816,10 @@ vue.onUnmounted(() => {
 });
 
 return (_ctx, _cache) => {
-  const _component_q_btn = vue.resolveComponent("q-btn");
-
   return (vue.openBlock(), vue.createElementBlock("div", null, [
     vue.createCommentVNode(" Toggle Button "),
     (__props.showToggleButton)
-      ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
+      ? (vue.openBlock(), vue.createBlock(vue.unref(quasar.QBtn), {
           key: 0,
           color: isOpen.value ? 'negative' : 'primary',
           label: isOpen.value ? __props.closeButtonText : __props.openButtonText,
@@ -888,7 +880,7 @@ return (_ctx, _cache) => {
                     style: vue.normalizeStyle(topControlsStyle.value)
                   }, [
                     vue.createElementVNode("div", _hoisted_2, [
-                      vue.createVNode(_component_q_btn, {
+                      vue.createVNode(vue.unref(quasar.QBtn), {
                         round: "",
                         flat: "",
                         size: "sm",
@@ -915,8 +907,9 @@ return (_ctx, _cache) => {
                   vue.createElementVNode("div", {
                     style: vue.normalizeStyle(captureButtonContainerStyle.value)
                   }, [
-                    vue.createVNode(_component_q_btn, {
+                    vue.createVNode(vue.unref(quasar.QBtn), {
                       round: "",
+                      size: "md",
                       color: "white",
                       icon: "photo_camera",
                       style: vue.normalizeStyle(captureButtonStyle.value),
@@ -926,7 +919,7 @@ return (_ctx, _cache) => {
                   ], 4 /* STYLE */),
                   vue.createCommentVNode(" View button "),
                   (__props.showViewButton && capturedImage.value)
-                    ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
+                    ? (vue.openBlock(), vue.createBlock(vue.unref(quasar.QBtn), {
                         key: 0,
                         round: "",
                         flat: "",
@@ -947,37 +940,21 @@ return (_ctx, _cache) => {
                   key: 5,
                   style: vue.normalizeStyle(postCaptureControlsStyle.value)
                 }, [
-                  (__props.showRetakeButton)
-                    ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
-                        key: 0,
-                        color: "warning",
-                        label: "Retake",
-                        icon: "refresh",
-                        style: vue.normalizeStyle(retakeButtonStyle.value),
-                        push: "",
-                        onClick: retakePhoto,
-                        onMouseenter: _cache[6] || (_cache[6] = $event => (hoverActionButton($event, true))),
-                        onMouseleave: _cache[7] || (_cache[7] = $event => (hoverActionButton($event, false)))
-                      }, null, 8 /* PROPS */, ["style"]))
-                    : vue.createCommentVNode("v-if", true),
-                  (__props.showDownloadButton)
-                    ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
-                        key: 1,
-                        color: "positive",
-                        label: "Download",
-                        icon: "download",
-                        style: vue.normalizeStyle(downloadButtonStyle.value),
-                        push: "",
-                        onClick: downloadImage,
-                        onMouseenter: _cache[8] || (_cache[8] = $event => (hoverActionButton($event, true))),
-                        onMouseleave: _cache[9] || (_cache[9] = $event => (hoverActionButton($event, false)))
-                      }, null, 8 /* PROPS */, ["style"]))
-                    : vue.createCommentVNode("v-if", true)
+                  vue.createVNode(vue.unref(quasar.QBtn), {
+                    round: "",
+                    size: "md",
+                    color: "primary",
+                    icon: "refresh",
+                    onClick: retakePhoto,
+                    style: { margin: '0 8px' },
+                    onMouseenter: _cache[6] || (_cache[6] = $event => (hoverActionButton($event, true))),
+                    onMouseleave: _cache[7] || (_cache[7] = $event => (hoverActionButton($event, false)))
+                  })
                 ], 4 /* STYLE */))
               : vue.createCommentVNode("v-if", true),
             vue.createCommentVNode(" Close button "),
             (__props.showCloseButton)
-              ? (vue.openBlock(), vue.createBlock(_component_q_btn, {
+              ? (vue.openBlock(), vue.createBlock(vue.unref(quasar.QBtn), {
                   key: 6,
                   round: "",
                   flat: "",
@@ -986,8 +963,8 @@ return (_ctx, _cache) => {
                   icon: "close",
                   style: vue.normalizeStyle(closeButtonStyle.value),
                   onClick: closeCamera,
-                  onMouseenter: _cache[10] || (_cache[10] = $event => (hoverButton($event, true))),
-                  onMouseleave: _cache[11] || (_cache[11] = $event => (hoverButton($event, false)))
+                  onMouseenter: _cache[8] || (_cache[8] = $event => (hoverButton($event, true))),
+                  onMouseleave: _cache[9] || (_cache[9] = $event => (hoverButton($event, false)))
                 }, null, 8 /* PROPS */, ["style"]))
               : vue.createCommentVNode("v-if", true)
           ], 4 /* STYLE */)

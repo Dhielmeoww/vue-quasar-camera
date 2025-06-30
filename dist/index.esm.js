@@ -1,5 +1,5 @@
-import { ref, computed, onUnmounted, resolveComponent, openBlock, createElementBlock, createCommentVNode, createBlock, normalizeStyle, createElementVNode, toDisplayString, createVNode } from 'vue';
-import { useQuasar } from 'quasar';
+import { ref, computed, onUnmounted, openBlock, createElementBlock, createCommentVNode, createBlock, unref, normalizeStyle, createElementVNode, toDisplayString, createVNode } from 'vue';
+import { useQuasar, QBtn } from 'quasar';
 
 const _hoisted_1 = ["src"];
 const _hoisted_2 = { style: { display: 'flex', gap: '8px' } };
@@ -17,11 +17,11 @@ var script = {
   },
   width: {
     type: [String, Number],
-    default: 350,
+    default: null,
   },
   height: {
     type: [String, Number],
-    default: 260,
+    default: null,
   },
 
   // Button texts
@@ -147,6 +147,26 @@ const toggleButtonStyle = computed(() => ({
   letterSpacing: "0.5px",
 }));
 
+const dynamicWidth = computed(() => {
+  // Jika width diberikan, gunakan nilai tersebut
+  if (props.width !== null) {
+    return typeof props.width === "number" ? `${props.width}px` : props.width;
+  }
+  // Jika tidak, kembalikan nilai default berdasarkan mode
+  return props.mode === "fullscreen" ? "100%" : "350px";
+});
+
+const dynamicHeight = computed(() => {
+  // Jika height diberikan, gunakan nilai tersebut
+  if (props.height !== null) {
+    return typeof props.height === "number"
+      ? `${props.height}px`
+      : props.height;
+  }
+  // Jika tidak, kembalikan nilai default berdasarkan mode
+  return props.mode === "fullscreen" ? "100%" : "260px";
+});
+
 const cameraContainerStyle = computed(() => ({
   position:
     props.mode === "corner"
@@ -169,18 +189,8 @@ const cameraContainerStyle = computed(() => ({
       : props.mode === "fullscreen"
       ? "2000"
       : "auto",
-  width:
-    props.mode === "corner"
-      ? "350px"
-      : props.mode === "fullscreen"
-      ? "100%"
-      : "100%",
-  height:
-    props.mode === "corner"
-      ? "260px"
-      : props.mode === "fullscreen"
-      ? "100%"
-      : "auto",
+  width: dynamicWidth.value, // Menggunakan computed width
+  height: dynamicHeight.value, // Menggunakan computed height
   margin: props.mode === "inline" ? "10px 0" : "0",
   background:
     props.mode === "fullscreen" ? "rgba(0, 0, 0, 0.95)" : "transparent",
@@ -198,18 +208,8 @@ const cameraFrameStyle = computed(() => ({
   boxShadow:
     "0 25px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
   border: "3px solid rgba(255, 255, 255, 0.1)",
-  width:
-    props.mode === "corner"
-      ? "100%"
-      : props.mode === "inline"
-      ? "100%"
-      : "85vw",
-  height:
-    props.mode === "corner"
-      ? "100%"
-      : props.mode === "inline"
-      ? "100%"
-      : "75vh",
+  width: "100%", // Selalu 100% dari container
+  height: "100%", // Selalu 100% dari container
   maxWidth: props.mode === "fullscreen" ? "900px" : "none",
   maxHeight: props.mode === "fullscreen" ? "700px" : "none",
   backdropFilter: "blur(20px)",
@@ -317,8 +317,8 @@ const captureButtonContainerStyle = computed(() => ({
 }));
 
 const captureButtonStyle = computed(() => ({
-  width: "60px",
-  height: "60px",
+  width: props.mode === "inline" ? "40px" : "60px",
+  height: props.mode === "inline" ? "40px" : "60px",
   background: isCapturing.value
     ? "rgba(52, 152, 219, 0.8)"
     : "rgba(255,255,255,0.95)",
@@ -329,7 +329,7 @@ const captureButtonStyle = computed(() => ({
     : "0 8px 32px rgba(31, 38, 135, 0.37)",
   animation: isCapturing.value ? "captureRing 0.5s" : "none",
   color: isCapturing.value ? "#fff" : "#3498db",
-  fontSize: "28px",
+  fontSize: props.mode === "inline" ? "22px" : "28px",
   transition: "all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 }));
 
@@ -351,30 +351,24 @@ const viewButtonStyle = computed(() => ({
 
 const postCaptureControlsStyle = computed(() => ({
   position: "absolute",
-  left: "0",
-  right: "0",
-  bottom: "15px",
+  left: "50%",
+  bottom: props.mode === "inline" ? "15px" : "25px",
+  transform: "translateX(-50%)",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   gap: "15px",
-  zIndex: "20",
+  zIndex: "25", // Pastikan z-index lebih tinggi
   pointerEvents: "all",
+  minHeight: props.mode === "inline" ? "50px" : "60px",
+  padding: props.mode === "inline" ? "8px 16px" : "12px 20px",
+  background: "rgba(0, 0, 0, 0.3)", // Background semi transparan
+  borderRadius: "30px",
+  backdropFilter: "blur(10px)",
+  border: "1px solid rgba(255, 255, 255, 0.1)",
 }));
 
-const retakeButtonStyle = computed(() => ({
-  minWidth: "100px",
-  height: "40px",
-  background: "linear-gradient(135deg, #f39c12 0%, #e67e22 100%)",
-  border: "2px solid rgba(255, 255, 255, 0.3)",
-  borderRadius: "20px",
-  fontWeight: "600",
-  letterSpacing: "0.5px",
-  fontSize: "14px",
-  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-}));
-
-const downloadButtonStyle = computed(() => ({
+computed(() => ({
   minWidth: "100px",
   height: "40px",
   background: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)",
@@ -818,12 +812,10 @@ onUnmounted(() => {
 });
 
 return (_ctx, _cache) => {
-  const _component_q_btn = resolveComponent("q-btn");
-
   return (openBlock(), createElementBlock("div", null, [
     createCommentVNode(" Toggle Button "),
     (__props.showToggleButton)
-      ? (openBlock(), createBlock(_component_q_btn, {
+      ? (openBlock(), createBlock(unref(QBtn), {
           key: 0,
           color: isOpen.value ? 'negative' : 'primary',
           label: isOpen.value ? __props.closeButtonText : __props.openButtonText,
@@ -884,7 +876,7 @@ return (_ctx, _cache) => {
                     style: normalizeStyle(topControlsStyle.value)
                   }, [
                     createElementVNode("div", _hoisted_2, [
-                      createVNode(_component_q_btn, {
+                      createVNode(unref(QBtn), {
                         round: "",
                         flat: "",
                         size: "sm",
@@ -911,8 +903,9 @@ return (_ctx, _cache) => {
                   createElementVNode("div", {
                     style: normalizeStyle(captureButtonContainerStyle.value)
                   }, [
-                    createVNode(_component_q_btn, {
+                    createVNode(unref(QBtn), {
                       round: "",
+                      size: "md",
                       color: "white",
                       icon: "photo_camera",
                       style: normalizeStyle(captureButtonStyle.value),
@@ -922,7 +915,7 @@ return (_ctx, _cache) => {
                   ], 4 /* STYLE */),
                   createCommentVNode(" View button "),
                   (__props.showViewButton && capturedImage.value)
-                    ? (openBlock(), createBlock(_component_q_btn, {
+                    ? (openBlock(), createBlock(unref(QBtn), {
                         key: 0,
                         round: "",
                         flat: "",
@@ -943,37 +936,21 @@ return (_ctx, _cache) => {
                   key: 5,
                   style: normalizeStyle(postCaptureControlsStyle.value)
                 }, [
-                  (__props.showRetakeButton)
-                    ? (openBlock(), createBlock(_component_q_btn, {
-                        key: 0,
-                        color: "warning",
-                        label: "Retake",
-                        icon: "refresh",
-                        style: normalizeStyle(retakeButtonStyle.value),
-                        push: "",
-                        onClick: retakePhoto,
-                        onMouseenter: _cache[6] || (_cache[6] = $event => (hoverActionButton($event, true))),
-                        onMouseleave: _cache[7] || (_cache[7] = $event => (hoverActionButton($event, false)))
-                      }, null, 8 /* PROPS */, ["style"]))
-                    : createCommentVNode("v-if", true),
-                  (__props.showDownloadButton)
-                    ? (openBlock(), createBlock(_component_q_btn, {
-                        key: 1,
-                        color: "positive",
-                        label: "Download",
-                        icon: "download",
-                        style: normalizeStyle(downloadButtonStyle.value),
-                        push: "",
-                        onClick: downloadImage,
-                        onMouseenter: _cache[8] || (_cache[8] = $event => (hoverActionButton($event, true))),
-                        onMouseleave: _cache[9] || (_cache[9] = $event => (hoverActionButton($event, false)))
-                      }, null, 8 /* PROPS */, ["style"]))
-                    : createCommentVNode("v-if", true)
+                  createVNode(unref(QBtn), {
+                    round: "",
+                    size: "md",
+                    color: "primary",
+                    icon: "refresh",
+                    onClick: retakePhoto,
+                    style: { margin: '0 8px' },
+                    onMouseenter: _cache[6] || (_cache[6] = $event => (hoverActionButton($event, true))),
+                    onMouseleave: _cache[7] || (_cache[7] = $event => (hoverActionButton($event, false)))
+                  })
                 ], 4 /* STYLE */))
               : createCommentVNode("v-if", true),
             createCommentVNode(" Close button "),
             (__props.showCloseButton)
-              ? (openBlock(), createBlock(_component_q_btn, {
+              ? (openBlock(), createBlock(unref(QBtn), {
                   key: 6,
                   round: "",
                   flat: "",
@@ -982,8 +959,8 @@ return (_ctx, _cache) => {
                   icon: "close",
                   style: normalizeStyle(closeButtonStyle.value),
                   onClick: closeCamera,
-                  onMouseenter: _cache[10] || (_cache[10] = $event => (hoverButton($event, true))),
-                  onMouseleave: _cache[11] || (_cache[11] = $event => (hoverButton($event, false)))
+                  onMouseenter: _cache[8] || (_cache[8] = $event => (hoverButton($event, true))),
+                  onMouseleave: _cache[9] || (_cache[9] = $event => (hoverButton($event, false)))
                 }, null, 8 /* PROPS */, ["style"]))
               : createCommentVNode("v-if", true)
           ], 4 /* STYLE */)
